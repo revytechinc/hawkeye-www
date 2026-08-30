@@ -7,7 +7,7 @@ const routes = [
   { path: '/', heading: /Meatball surgery on servers and desktops/i },
   { path: '/install', heading: 'Install' },
   { path: '/rescue', heading: 'Rescue tiers' },
-  { path: '/mcp', heading: 'MCP' },
+  { path: '/docs/mcp', heading: 'MCP' },
   { path: '/security', heading: 'Security' },
 ] as const;
 
@@ -39,6 +39,9 @@ test.describe('Hawkeye public site', () => {
     await expect(page.getByText(/not the doctor/i)).toBeVisible();
     await expect(page.getByRole('heading', { name: 'What this site is not' })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Field examples' })).toBeVisible();
+    await expect(page.getByRole('link', { name: /MCP docs/i })).toHaveAttribute('href', '/docs/mcp');
+    await expect(page.locator('body')).not.toContainText('MCP on localhost');
+    await expect(page.locator('body')).not.toContainText('not a public MCP service');
     await expect(page.getByRole('link', { name: 'Skip to content' })).toBeAttached();
     const suffix = isMobile ? 'mobile' : 'desktop';
     await page.screenshot({ path: path.join(shot, `home-${suffix}.png`), fullPage: true });
@@ -107,8 +110,14 @@ test.describe('Hawkeye public site', () => {
     await expect(page.getByText("/rescue/sh -c 'echo rescue-ok'")).toBeVisible();
     await page.screenshot({ path: path.join(shot, `rescue-${isMobile ? 'mobile' : 'desktop'}.png`), fullPage: true });
 
-    await page.goto('/mcp');
-    await expect(page.getByRole('heading', { name: 'Localhost default' })).toBeVisible();
+    await page.goto('/docs/mcp');
+    await expect(page.getByRole('heading', { name: 'Protocol URL' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'https://hawkeye.revytechinc.com/mcp' })).toBeVisible();
+    await expect(page.getByText('401')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Localhost default' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Not a public service' })).toHaveCount(0);
+    await expect(page.locator('body')).not.toContainText('localhost-only');
+    await expect(page.locator('body')).not.toContainText('not a public MCP service');
     await page.screenshot({ path: path.join(shot, `mcp-${isMobile ? 'mobile' : 'desktop'}.png`), fullPage: true });
 
     await page.goto('/security');

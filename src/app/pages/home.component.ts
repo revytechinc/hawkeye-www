@@ -93,7 +93,7 @@ import { RouterLink } from '@angular/router';
         <ul class="mt-4 grid gap-2 md:grid-cols-2">
           <li><a routerLink="/install" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Install with pkg or ports</a></li>
           <li><a routerLink="/rescue" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Rescue tiers 0, 1, and 2</a></li>
-          <li><a routerLink="/mcp" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">MCP on localhost, not the public internet</a></li>
+          <li><a routerLink="/docs/mcp" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">MCP docs — bearer token required</a></li>
           <li><a routerLink="/security" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Secrets never through LLMs</a></li>
         </ul>
       </section>

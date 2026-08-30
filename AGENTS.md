@@ -38,7 +38,7 @@ Do not set global git config. Use one-shot author flags on commits.
 
 ## Pages (keep small)
 
-Home, Install, Rescue (tiers 0/1/2), MCP (stdio + Streamable HTTPS, localhost default, not a public service), Security (secrets never through LLMs). Footer links the three GitHub repos plus cloudbsd.org and revytechinc.com.
+Home, Install, Rescue (tiers 0/1/2), MCP docs at /docs/mcp (protocol URL https://hawkeye.revytechinc.com/mcp is Streamable HTTPS with a bearer token on GET and POST; do not share GET /mcp with the SPA; never display a token), Security (secrets never through LLMs). Footer links the three GitHub repos plus cloudbsd.org and revytechinc.com.
 
 ## License
 

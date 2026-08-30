@@ -104,7 +104,7 @@ export class LayoutComponent {
     { path: '/', label: 'Home', exact: true },
     { path: '/install', label: 'Install', exact: false },
     { path: '/rescue', label: 'Rescue', exact: false },
-    { path: '/mcp', label: 'MCP', exact: false },
+    { path: '/docs/mcp', label: 'MCP', exact: false },
     { path: '/security', label: 'Security', exact: false },
   ];
 

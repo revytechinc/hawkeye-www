@@ -11,26 +11,31 @@ import { RouterLink } from '@angular/router';
   template: `
     <article class="min-w-0 max-w-3xl">
       <h1 class="font-heading text-3xl sm:text-4xl">MCP</h1>
-      <p class="mt-4 text-base sm:text-lg">Hawkeye can speak the Model Context Protocol so a local agent can call diagnose and related tools. It is a loopback helper, not a public service.</p>
+      <p class="mt-4 text-base sm:text-lg">Hawkeye speaks the Model Context Protocol so an agent can call diagnose and related tools. The public endpoint is authenticated. You must have a token.</p>
 
-      <section class="mt-8 min-w-0 rounded-xl border border-line bg-panel p-5 sm:p-6" aria-labelledby="transports-heading">
+      <section class="mt-8 min-w-0 rounded-xl border border-line bg-panel p-5 sm:p-6" aria-labelledby="protocol-heading">
+        <h2 id="protocol-heading" class="font-heading text-xl sm:text-2xl">Protocol URL</h2>
+        <p class="mt-3">Streamable HTTPS owns <code class="rounded bg-surface px-1">GET</code> and <code class="rounded bg-surface px-1">POST</code> on this URL. The docs site does not share that path.</p>
+        <p class="mt-3"><a class="break-all text-brand underline-offset-2 hover:underline" href="https://hawkeye.revytechinc.com/mcp">https://hawkeye.revytechinc.com/mcp</a></p>
+        <ul class="mt-4 list-disc space-y-2 pl-5">
+          <li>Streamable HTTPS. <code class="rounded bg-surface px-1">GET</code> is SSE. <code class="rounded bg-surface px-1">POST</code> is the request channel.</li>
+          <li>TLS via the existing Let’s Encrypt certificate.</li>
+          <li>Authorization: a bearer token is required on <code class="rounded bg-surface px-1">GET</code> and <code class="rounded bg-surface px-1">POST</code>.</li>
+          <li>Missing token: <code class="rounded bg-surface px-1">401</code>.</li>
+          <li>No anonymous access.</li>
+        </ul>
+        <p class="mt-3">This page does not issue or display a token.</p>
+      </section>
+
+      <section class="mt-6 min-w-0 rounded-xl border border-line bg-panel p-5 sm:p-6" aria-labelledby="transports-heading">
         <h2 id="transports-heading" class="font-heading text-xl sm:text-2xl">Transports</h2>
         <ul class="mt-4 list-disc space-y-2 pl-5">
-          <li><strong>stdio</strong> — a local agent starts Hawkeye as a child process and talks on stdin/stdout.</li>
-          <li><strong>Streamable HTTPS</strong> — an HTTP transport for local MCP clients that prefer a URL.</li>
+          <li><strong>stdio</strong> — an agent starts Hawkeye as a child process and talks on stdin/stdout.</li>
+          <li><strong>Streamable HTTPS</strong> — the public protocol URL above.</li>
         </ul>
       </section>
 
-      <section class="mt-6 min-w-0 rounded-xl border border-line bg-panel p-5 sm:p-6" aria-labelledby="bind-heading">
-        <h2 id="bind-heading" class="font-heading text-xl sm:text-2xl">Localhost default</h2>
-        <p class="mt-3">The HTTPS transport binds to localhost by default. That is the supported mode. Do not publish it on the internet. Do not put it behind a public reverse proxy as if it were an API.</p>
-        <p class="mt-3">This documentation site does not host MCP. There is no MCP endpoint here.</p>
-      </section>
-
-      <section class="mt-6 min-w-0 rounded-xl border border-amber-200 bg-amber-50 p-5 sm:p-6" aria-labelledby="not-public-heading">
-        <h2 id="not-public-heading" class="font-heading text-xl sm:text-2xl">Not a public service</h2>
-        <p class="mt-3">An MCP socket on a sick host is still a privileged control plane. Treat it like SSH to root: local, authenticated, and off the public network. Secrets still never go through the LLM — see <a routerLink="/security" class="text-brand underline-offset-2 hover:underline">Security</a>.</p>
-      </section>
+      <p class="mt-6">Secrets still never go through the LLM — see <a routerLink="/security" class="text-brand underline-offset-2 hover:underline">Security</a>.</p>
     </article>
   `,
 })

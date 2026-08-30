@@ -28,7 +28,7 @@ import { RouterLink } from '@angular/router';
           <li>Dry-run first. Privileged apply needs <code class="rounded bg-surface px-1">--yes</code>.</li>
           <li>There is no web doctor. Apply is the local CLI, not this site.</li>
         </ul>
-        <p class="mt-3">See <a routerLink="/mcp" class="text-brand underline-offset-2 hover:underline">MCP</a> for the local-only agent path and <a routerLink="/rescue" class="text-brand underline-offset-2 hover:underline">Rescue</a> for where the binary runs.</p>
+        <p class="mt-3">See <a routerLink="/docs/mcp" class="text-brand underline-offset-2 hover:underline">MCP</a> for the public authenticated endpoint and <a routerLink="/rescue" class="text-brand underline-offset-2 hover:underline">Rescue</a> for where the binary runs.</p>
       </section>
     </article>
   `,
