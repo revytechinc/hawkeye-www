@@ -4,10 +4,11 @@
  */
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ConsultSessionComponent } from '../consult-session.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [RouterLink, ConsultSessionComponent],
   template: `
     <article class="min-w-0">
       <header class="-mx-4 -mt-8 mb-10 bg-gradient-to-br from-navy via-navy-mid to-navy-deep px-4 py-8 text-white sm:-mt-10 sm:py-12 md:rounded-b-2xl">
@@ -47,27 +48,14 @@ import { RouterLink } from '@angular/router';
         </ul>
       </section>
 
-      <section aria-labelledby="examples-heading" class="mt-10">
+      <section aria-labelledby="examples-heading" class="mt-10 min-w-0">
         <h2 id="examples-heading" class="font-heading text-xl sm:text-2xl">Field examples</h2>
-        <p class="mt-3 max-w-3xl text-sm text-slate-600">From the knowledge kit. Host commands, not a consult transcript.</p>
-        <div class="mt-4 grid min-w-0 gap-4 sm:grid-cols-2">
-          <a routerLink="/rescue" fragment="zfs-remount" class="min-w-0 rounded-xl border border-line bg-panel p-5 hover:border-brand">
-            <h3 class="font-heading text-lg text-brand">Remount ZFS root read-write</h3>
-            <p class="mt-2 text-sm">When <code class="rounded bg-surface px-1">/</code> is ZFS and mount shows read-only.</p>
-          </a>
-          <a routerLink="/rescue" fragment="zpool-import" class="min-w-0 rounded-xl border border-line bg-panel p-5 hover:border-brand">
-            <h3 class="font-heading text-lg text-brand">Import a ZFS pool</h3>
-            <p class="mt-2 text-sm">Readonly first. Dataset readonly=off is not enough if the pool is readonly.</p>
-          </a>
-          <a routerLink="/rescue" fragment="nic-up" class="min-w-0 rounded-xl border border-line bg-panel p-5 hover:border-brand">
-            <h3 class="font-heading text-lg text-brand">Bring up a NIC</h3>
-            <p class="mt-2 text-sm">When there is no usable net. Skip if the failure is disks.</p>
-          </a>
-          <a routerLink="/rescue" fragment="rescue-path" class="min-w-0 rounded-xl border border-line bg-panel p-5 hover:border-brand">
-            <h3 class="font-heading text-lg text-brand">/rescue when userland is missing</h3>
-            <p class="mt-2 text-sm">Put <code class="rounded bg-surface px-1">/rescue</code> first on PATH.</p>
-          </a>
-        </div>
+        <p class="mt-3 max-w-3xl text-sm text-slate-600">What the operator typed on the host. <code class="rounded bg-surface px-1">hawkeye consult</code> prints JSON. This session was captured 2026-08-30 on a Hawkeye jail; the local LLM was skipped.</p>
+        <app-consult-session />
+        <p class="mt-4 max-w-3xl text-sm">
+          <a routerLink="/rescue" fragment="hit-contains" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Rescue</a>
+          shows what one of those hits contains — the host commands inside a playbook.
+        </p>
       </section>
 
       <section aria-labelledby="repos-heading" class="mt-10">
