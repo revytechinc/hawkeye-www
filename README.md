@@ -40,4 +40,6 @@ See docs/overview.md for the repository map (Mermaid).
 
 ## Develop
 
-Requires Node 20. Use the install and start scripts in package.json. Production output is dist/hawkeye-www/browser/. GitHub Actions runs the production build. Playwright smoke covers desktop Chrome against the production build; screenshots belong in artifacts/playwright/.
+Requires Node 20. Use the install and start scripts in package.json. Production output is dist/hawkeye-www/browser/. GitHub Actions runs the production build and Playwright smoke.
+
+The same URLs must work at phone width and desktop width. Playwright covers Chromium at ~375px (plus 320/390 overflow checks) and ~1280px against the production build. Screenshots belong in artifacts/playwright/. FreeBSD cannot run Playwright; the cloud VM and GitHub Actions can.

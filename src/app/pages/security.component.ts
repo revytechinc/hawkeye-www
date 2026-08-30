@@ -9,12 +9,12 @@ import { RouterLink } from '@angular/router';
   selector: 'app-security',
   imports: [RouterLink],
   template: `
-    <article class="max-w-3xl">
-      <h1 class="font-heading text-4xl">Security</h1>
-      <p class="mt-4 text-lg">Hawkeye may use a model to reason about a diagnosis. Credentials never ride along.</p>
+    <article class="min-w-0 max-w-3xl">
+      <h1 class="font-heading text-3xl sm:text-4xl">Security</h1>
+      <p class="mt-4 text-base sm:text-lg">Hawkeye may use a model to reason about a diagnosis. Credentials never ride along.</p>
 
-      <section class="mt-8 rounded-xl border border-line bg-panel p-6" aria-labelledby="secrets-heading">
-        <h2 id="secrets-heading" class="font-heading text-2xl">Secrets never through LLMs</h2>
+      <section class="mt-8 min-w-0 rounded-xl border border-line bg-panel p-5 sm:p-6" aria-labelledby="secrets-heading">
+        <h2 id="secrets-heading" class="font-heading text-xl sm:text-2xl">Secrets never through LLMs</h2>
         <ul class="mt-4 list-disc space-y-2 pl-5">
           <li>Passwords, API tokens, private keys, and similar secrets stay on the host.</li>
           <li>A diagnosis sent to a model is redacted. The model does not receive the secret material needed to impersonate the host.</li>
@@ -22,8 +22,8 @@ import { RouterLink } from '@angular/router';
         </ul>
       </section>
 
-      <section class="mt-6 rounded-xl border border-line bg-panel p-6" aria-labelledby="browser-heading">
-        <h2 id="browser-heading" class="font-heading text-2xl">This site cannot doctor a host</h2>
+      <section class="mt-6 min-w-0 rounded-xl border border-line bg-panel p-5 sm:p-6" aria-labelledby="browser-heading">
+        <h2 id="browser-heading" class="font-heading text-xl sm:text-2xl">This site cannot doctor a host</h2>
         <ul class="mt-4 list-disc space-y-2 pl-5">
           <li>No public chat UI.</li>
           <li>No operator recovery console in the browser.</li>
