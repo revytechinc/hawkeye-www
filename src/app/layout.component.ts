@@ -12,11 +12,11 @@ import { filter } from 'rxjs';
   imports: [RouterLink, RouterLinkActive, RouterOutlet],
   template: `
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="bg-navy text-white" role="banner">
+    <header class="sticky top-0 z-40 bg-navy text-white" role="banner">
       <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3">
         <a
           routerLink="/"
-          class="group inline-flex min-h-11 items-center gap-3 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan"
+          class="group inline-flex min-h-12 items-center gap-3 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan"
         >
           <img src="/images/hawkeye-pierce-hero.png" width="48" height="61" alt="" class="h-10 w-auto rounded border border-cyan/40 sm:h-12" />
           <span class="inline-flex flex-col">
@@ -26,7 +26,7 @@ import { filter } from 'rxjs';
         </a>
         <button
           type="button"
-          class="inline-flex min-h-11 min-w-11 items-center justify-center rounded border border-cyan/50 text-cyan md:hidden"
+          class="inline-flex min-h-12 min-w-12 items-center justify-center rounded border border-cyan/50 text-cyan md:hidden"
           [attr.aria-expanded]="menuOpen()"
           aria-controls="primary-nav"
           (click)="toggleMenu()"
@@ -55,7 +55,7 @@ import { filter } from 'rxjs';
                   [routerLink]="item.path"
                   routerLinkActive="text-cyan underline decoration-cyan underline-offset-4"
                   [routerLinkActiveOptions]="{ exact: item.exact }"
-                  class="inline-flex min-h-11 items-center px-2 text-base font-medium text-white hover:text-cyan md:text-sm"
+                  class="inline-flex min-h-12 items-center px-2 text-base font-medium text-white hover:text-cyan md:text-sm"
                 >{{ item.label }}</a>
               </li>
             }
@@ -76,16 +76,16 @@ import { filter } from 'rxjs';
         <div>
           <h2 class="font-heading text-sm font-semibold text-cyan">Source</h2>
           <ul class="mt-3 space-y-1 text-sm">
-            <li><a class="inline-flex min-h-11 items-center hover:text-cyan" href="https://github.com/revytechinc/hawkeye">hawkeye (bins)</a></li>
-            <li><a class="inline-flex min-h-11 items-center hover:text-cyan" href="https://github.com/revytechinc/hawkeye-data">hawkeye-data (knowledge kit)</a></li>
-            <li><a class="inline-flex min-h-11 items-center hover:text-cyan" href="https://github.com/revytechinc/hawkeye-www">hawkeye-www (this site)</a></li>
+            <li><a class="inline-flex min-h-12 items-center hover:text-cyan" href="https://github.com/revytechinc/hawkeye">hawkeye (bins)</a></li>
+            <li><a class="inline-flex min-h-12 items-center hover:text-cyan" href="https://github.com/revytechinc/hawkeye-data">hawkeye-data (knowledge kit)</a></li>
+            <li><a class="inline-flex min-h-12 items-center hover:text-cyan" href="https://github.com/revytechinc/hawkeye-www">hawkeye-www (this site)</a></li>
           </ul>
         </div>
         <div>
           <h2 class="font-heading text-sm font-semibold text-cyan">Family</h2>
           <ul class="mt-3 space-y-1 text-sm">
-            <li><a class="inline-flex min-h-11 items-center hover:text-cyan" href="https://revytechinc.com">revytechinc.com</a></li>
-            <li><a class="inline-flex min-h-11 items-center hover:text-cyan" href="https://cloudbsd.org">cloudbsd.org</a></li>
+            <li><a class="inline-flex min-h-12 items-center hover:text-cyan" href="https://revytechinc.com">revytechinc.com</a></li>
+            <li><a class="inline-flex min-h-12 items-center hover:text-cyan" href="https://cloudbsd.org">cloudbsd.org</a></li>
           </ul>
         </div>
       </div>
