@@ -12,9 +12,12 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="bg-navy text-white" role="banner">
       <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between">
-        <a routerLink="/" class="group inline-flex flex-col no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan">
-          <span class="text-xs font-semibold tracking-[0.2em] text-cyan">REVYTECH</span>
-          <span class="font-heading text-2xl font-semibold text-white group-hover:text-cyan">Hawkeye</span>
+        <a routerLink="/" class="group inline-flex items-center gap-3 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan">
+          <img src="/images/hawkeye-pierce-hero.png" width="48" height="61" alt="" class="h-12 w-auto rounded border border-cyan/40" />
+          <span class="inline-flex flex-col">
+            <span class="text-xs font-semibold tracking-[0.2em] text-cyan">REVYTECH</span>
+            <span class="font-heading text-2xl font-semibold text-white group-hover:text-cyan">Hawkeye</span>
+          </span>
         </a>
         <nav aria-label="Primary">
           <ul class="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center md:gap-6">
@@ -40,7 +43,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
         <div>
           <p class="text-xs font-semibold tracking-[0.2em] text-cyan">REVYTECH</p>
           <p class="mt-2 font-heading text-lg">Hawkeye</p>
-          <p class="mt-2 text-sm text-slate-200">Public docs site. Not a doctor, not a chat UI, not a recovery console.</p>
+          <p class="mt-2 text-sm text-slate-200">Trench-warfare medicine for FreeBSD. Meatball surgery on servers and desktops, not people.</p>
         </div>
         <div>
           <h2 class="font-heading text-sm font-semibold text-cyan">Source</h2>
@@ -60,6 +63,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
       </div>
       <p class="border-t border-navy-deep px-4 py-4 text-center text-xs text-slate-300">
         Copyright 2026 REVYTECH, Inc. BSD 3-Clause. CloudBSD is the platform; Hawkeye is a REVYTECH product.
+        Still of Hawkeye Pierce (1975, CBS) is public domain in the United States; restoration is REVYTECH work product.
       </p>
     </footer>
   `,

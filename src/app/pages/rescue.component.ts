@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
   template: `
     <article class="max-w-3xl">
       <h1 class="font-heading text-4xl">Rescue tiers</h1>
-      <p class="mt-4 text-lg">Hawkeye is a field surgeon. The host is not always a comfortable multi-user box. These tiers are the situations it is built for, in plain language.</p>
+      <p class="mt-4 text-lg">Hawkeye is trench-warfare medicine, not a hospital. The host is a casualty: root may be read-only, /usr may be gone, the NIC may be dead. These tiers are the aid station, in plain language.</p>
 
       <ol class="mt-8 space-y-6">
         <li class="rounded-xl border border-line bg-panel p-6">

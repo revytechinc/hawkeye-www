@@ -1,6 +1,8 @@
 # Hawkeye public site
 
-Public product and documentation site for Hawkeye, REVYTECH's FreeBSD field surgeon.
+Public product and documentation site for Hawkeye, REVYTECH's FreeBSD trench medic.
+
+Meatball surgery on servers and desktops, not people. Trench-warfare medicine for a host that is down.
 
 This repository is not the doctor. It explains Hawkeye and points at the other repos. There is no public chat UI, no recovery console, and no privileged apply from the browser.
 
@@ -12,11 +14,15 @@ This repository is not the doctor. It explains Hawkeye and points at the other r
 
 ## Pages
 
-- Home: what Hawkeye is (diagnose + apply, works in rescue)
+- Home: meatball surgery on servers and desktops (diagnose + apply, works in rescue)
 - Install: pkg or port, two packages, /rescue and /boot/hawkeye
-- Rescue: tiers 0 / 1 / 2
+- Rescue: tiers 0 / 1 / 2 (the aid station)
 - MCP: stdio + Streamable HTTPS, localhost default
 - Security: secrets never through LLMs
+
+## Brand still
+
+`public/images/hawkeye-pierce-hero.png` is a restored 1975 CBS still of Hawkeye Pierce. The still is public domain in the United States. Restoration is REVYTECH work product. `public/images/hawkeye-pierce-1975.jpg` is the original scan used as the source.
 
 ## Stack
 
