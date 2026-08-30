@@ -32,7 +32,7 @@ Do not set global git config. Use one-shot author flags on commits.
 - WCAG 2.1 AA, keyboard navigable.
 - Mermaid for architecture/flow; SVG for UI mockups; ASCII diagrams forbidden.
 - BSD 3-Clause (Copyright REVYTECH, Inc.), not MIT.
-- Evidence required: production build must succeed. Playwright smoke (desktop screenshot under artifacts/playwright/) is the UI evidence path.
+- Evidence required: production build must succeed. Playwright smoke must cover phone (~375px) and desktop (~1280px) of the same URLs. Screenshots under artifacts/playwright/. Viewport meta alone is not proof. FreeBSD cannot run Playwright; the cloud VM and GitHub Actions can.
 - Red-green TDD for new behavior. Missing tests are a defect.
 - Secrets never in the repo. Secrets never through LLMs (document that; do not build a chat that sends them).
 

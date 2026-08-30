@@ -55,12 +55,28 @@
     font-family: Inter, "DejaVu Sans", ui-sans-serif, system-ui, sans-serif;
     font-size: 16px;
     line-height: 1.55;
+    overflow-wrap: break-word;
   }
   h1, h2, h3, h4, .font-heading {
     font-family: Outfit, "DejaVu Sans", ui-sans-serif, system-ui, sans-serif;
   }
   h1, h2, h3, h4 {
     color: #001a33;
+  }
+  img, video, svg, canvas {
+    max-width: 100%;
+    height: auto;
+  }
+  pre {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

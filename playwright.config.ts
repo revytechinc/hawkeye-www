@@ -22,8 +22,18 @@ export default defineConfig({
       name: 'desktop',
       use: {
         ...devices['Desktop Chrome'],
-        channel: 'chrome',
+        browserName: 'chromium',
         viewport: { width: 1280, height: 800 },
+      },
+    },
+    {
+      name: 'mobile',
+      use: {
+        ...devices['iPhone 12'],
+        browserName: 'chromium',
+        viewport: { width: 375, height: 812 },
+        hasTouch: true,
+        isMobile: true,
       },
     },
   ],

@@ -12,7 +12,19 @@ jobs:
         run: npm ci
       - name: Build Angular app
         run: npm run build
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Playwright desktop and mobile smoke
+        run: npx playwright test
       - uses: actions/upload-artifact@v4
         with:
           name: hawkeye-www-dist
           path: dist/hawkeye-www
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hawkeye-www-playwright
+          path: |
+            artifacts/playwright
+            playwright-report
+            test-results
