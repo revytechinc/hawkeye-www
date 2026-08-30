@@ -37,6 +37,8 @@ test.describe('Hawkeye public site', () => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1, name: /Meatball surgery on servers and desktops/i })).toBeVisible();
     await expect(page.getByText(/not the doctor/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'What this site is not' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Field examples' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Skip to content' })).toBeAttached();
     const suffix = isMobile ? 'mobile' : 'desktop';
     await page.screenshot({ path: path.join(shot, `home-${suffix}.png`), fullPage: true });
@@ -55,14 +57,14 @@ test.describe('Hawkeye public site', () => {
       await expect(menu).toBeVisible();
       const box = await menu.boundingBox();
       expect(box, 'menu button is present').toBeTruthy();
-      expect(box!.width).toBeGreaterThanOrEqual(44);
-      expect(box!.height).toBeGreaterThanOrEqual(44);
+      expect(box!.width).toBeGreaterThanOrEqual(48);
+      expect(box!.height).toBeGreaterThanOrEqual(48);
       await expect(install).toBeHidden();
       await menu.click();
       await expect(install).toBeVisible();
       const installBox = await install.boundingBox();
       expect(installBox, 'install link is present').toBeTruthy();
-      expect(installBox!.height).toBeGreaterThanOrEqual(44);
+      expect(installBox!.height).toBeGreaterThanOrEqual(48);
       await page.keyboard.press('Escape');
       await expect(install).toBeHidden();
     } else {
@@ -80,12 +82,14 @@ test.describe('Hawkeye public site', () => {
       for (const route of routes) {
         await page.goto(route.path);
         await expect(page.getByRole('heading', { level: 1, name: route.heading })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'What this site is not' })).toHaveCount(0);
         await assertNoHorizontalOverflow(page);
       }
     }
 
     await page.goto('/install');
-    await expect(page.getByText('hawkeye-data', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('pkg install hawkeye hawkeye-data')).toBeVisible();
+    await expect(page.locator('body')).not.toContainText('revytech-hawkeye');
     const pre = page.locator('pre').first();
     await expect(pre).toBeVisible();
     const preBox = await pre.boundingBox();
@@ -97,6 +101,10 @@ test.describe('Hawkeye public site', () => {
 
     await page.goto('/rescue');
     await expect(page.getByText('TIER 0')).toBeVisible();
+    await expect(page.getByText('zfs set readonly=off')).toBeVisible();
+    await expect(page.getByText('zpool import -o readonly=on -N POOL')).toBeVisible();
+    await expect(page.getByText('dhclient')).toBeVisible();
+    await expect(page.getByText("/rescue/sh -c 'echo rescue-ok'")).toBeVisible();
     await page.screenshot({ path: path.join(shot, `rescue-${isMobile ? 'mobile' : 'desktop'}.png`), fullPage: true });
 
     await page.goto('/mcp');
@@ -105,6 +113,8 @@ test.describe('Hawkeye public site', () => {
 
     await page.goto('/security');
     await expect(page.getByRole('heading', { name: 'Secrets never through LLMs' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Apply is local and needs --yes' })).toBeVisible();
+    await expect(page.getByText('--yes', { exact: true })).toBeVisible();
     const suffix = isMobile ? 'mobile' : 'desktop';
     await page.screenshot({ path: path.join(shot, `security-${suffix}.png`), fullPage: true });
   });

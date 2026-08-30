@@ -11,8 +11,8 @@ import { RouterLink } from '@angular/router';
   template: `
     <article class="min-w-0">
       <header class="-mx-4 -mt-8 mb-10 bg-gradient-to-br from-navy via-navy-mid to-navy-deep px-4 py-8 text-white sm:-mt-10 sm:py-12 md:rounded-b-2xl">
-        <div class="mx-auto grid min-w-0 max-w-6xl items-center gap-6 md:grid-cols-[minmax(0,16rem)_1fr] md:gap-8">
-          <figure class="mx-auto w-full max-w-[13rem] min-w-0 sm:max-w-xs md:max-w-none">
+        <div class="mx-auto flex min-w-0 max-w-6xl flex-col-reverse items-center gap-6 md:grid md:grid-cols-[7fr_5fr] md:items-center md:gap-8">
+          <figure class="mx-auto w-full max-w-[13rem] min-w-0 sm:max-w-xs md:col-start-2 md:row-start-1 md:max-w-none">
             <img
               src="/images/hawkeye-pierce-hero.png"
               width="732"
@@ -24,37 +24,49 @@ import { RouterLink } from '@angular/router';
               Trench medic. Servers and desktops, not people.
             </figcaption>
           </figure>
-          <div class="min-w-0">
+          <div class="min-w-0 md:col-start-1 md:row-start-1">
             <p class="text-xs font-semibold tracking-[0.2em] text-cyan sm:text-sm">REVYTECH PRODUCT</p>
             <h1 class="mt-3 font-heading text-3xl font-semibold text-white sm:text-4xl md:text-5xl">Meatball surgery on servers and desktops</h1>
             <p class="mt-4 max-w-2xl text-base text-slate-100 sm:text-lg">Hawkeye is trench-warfare medicine for FreeBSD. The host is down, root may be read-only, the network may be dead. Consult, plan, apply. Get the box walking. Pretty can wait.</p>
             <p class="mt-4 max-w-2xl text-sm text-slate-200">This website explains Hawkeye. It is not the doctor. There is no public chat UI, no recovery console, and no privileged apply from the browser.</p>
-            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a routerLink="/install" class="inline-flex min-h-11 items-center justify-center rounded bg-brand px-5 py-3 font-semibold text-white hover:bg-brand-dark">Install Hawkeye</a>
-              <a routerLink="/rescue" class="inline-flex min-h-11 items-center justify-center rounded border border-cyan px-5 py-3 font-semibold text-cyan hover:bg-navy-deep">Rescue tiers</a>
+            <div class="mt-8 flex w-full flex-col gap-3 md:flex-row">
+              <a routerLink="/install" class="inline-flex min-h-12 w-full items-center justify-center rounded bg-brand px-5 py-3 font-semibold text-white hover:bg-brand-dark md:w-auto">Install Hawkeye</a>
+              <a routerLink="/rescue" class="inline-flex min-h-12 w-full items-center justify-center rounded border border-cyan px-5 py-3 font-semibold text-cyan hover:bg-navy-deep md:w-auto">Rescue tiers</a>
             </div>
           </div>
         </div>
       </header>
 
-      <section aria-labelledby="what-heading" class="grid min-w-0 gap-6 md:grid-cols-2">
-        <div class="min-w-0 rounded-xl border border-line bg-panel p-5 shadow-sm sm:p-6">
-          <h2 id="what-heading" class="font-heading text-xl sm:text-2xl">What it does</h2>
-          <ul class="mt-4 list-disc space-y-2 pl-5">
-            <li><strong>Meatball surgery</strong> on sick servers and desktops: stop the bleeding, mount rw, get a NIC talking.</li>
-            <li><strong>Diagnose</strong> with the knowledge kit, even with no GPU and no net.</li>
-            <li><strong>Apply</strong> on the host itself. Dry-run first. LLM never execs as root.</li>
-            <li><strong>Works in the trench</strong> via <code class="rounded bg-surface px-1">/rescue</code> and <code class="rounded bg-surface px-1">/boot/hawkeye</code>.</li>
-          </ul>
-        </div>
-        <div class="min-w-0 rounded-xl border border-line bg-panel p-5 shadow-sm sm:p-6">
-          <h2 class="font-heading text-xl sm:text-2xl">What this site is not</h2>
-          <ul class="mt-4 list-disc space-y-2 pl-5">
-            <li>Not surgery on humans. Not a hospital product.</li>
-            <li>Not a web console that doctors a remote host.</li>
-            <li>Not a public MCP service.</li>
-            <li>Not a place to paste secrets or apply privileged changes.</li>
-          </ul>
+      <section aria-labelledby="what-heading" class="min-w-0 rounded-xl border border-line bg-panel p-5 shadow-sm sm:p-6">
+        <h2 id="what-heading" class="font-heading text-xl sm:text-2xl">What it does</h2>
+        <ul class="mt-4 list-disc space-y-2 pl-5">
+          <li><strong>Meatball surgery</strong> on sick servers and desktops: stop the bleeding, mount rw, get a NIC talking.</li>
+          <li><strong>Diagnose</strong> with the knowledge kit, even with no GPU and no net.</li>
+          <li><strong>Apply</strong> on the host itself. Dry-run first. Privileged apply needs <code class="rounded bg-surface px-1">--yes</code>.</li>
+          <li><strong>Works in the trench</strong> via <code class="rounded bg-surface px-1">/rescue</code> and <code class="rounded bg-surface px-1">/boot/hawkeye</code>.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="examples-heading" class="mt-10">
+        <h2 id="examples-heading" class="font-heading text-xl sm:text-2xl">Field examples</h2>
+        <p class="mt-3 max-w-3xl text-sm text-slate-600">From the knowledge kit. Host commands, not a consult transcript.</p>
+        <div class="mt-4 grid min-w-0 gap-4 sm:grid-cols-2">
+          <a routerLink="/rescue" fragment="zfs-remount" class="min-w-0 rounded-xl border border-line bg-panel p-5 hover:border-brand">
+            <h3 class="font-heading text-lg text-brand">Remount ZFS root read-write</h3>
+            <p class="mt-2 text-sm">When <code class="rounded bg-surface px-1">/</code> is ZFS and mount shows read-only.</p>
+          </a>
+          <a routerLink="/rescue" fragment="zpool-import" class="min-w-0 rounded-xl border border-line bg-panel p-5 hover:border-brand">
+            <h3 class="font-heading text-lg text-brand">Import a ZFS pool</h3>
+            <p class="mt-2 text-sm">Readonly first. Dataset readonly=off is not enough if the pool is readonly.</p>
+          </a>
+          <a routerLink="/rescue" fragment="nic-up" class="min-w-0 rounded-xl border border-line bg-panel p-5 hover:border-brand">
+            <h3 class="font-heading text-lg text-brand">Bring up a NIC</h3>
+            <p class="mt-2 text-sm">When there is no usable net. Skip if the failure is disks.</p>
+          </a>
+          <a routerLink="/rescue" fragment="rescue-path" class="min-w-0 rounded-xl border border-line bg-panel p-5 hover:border-brand">
+            <h3 class="font-heading text-lg text-brand">/rescue when userland is missing</h3>
+            <p class="mt-2 text-sm">Put <code class="rounded bg-surface px-1">/rescue</code> first on PATH.</p>
+          </a>
         </div>
       </section>
 
@@ -79,10 +91,10 @@ import { RouterLink } from '@angular/router';
       <section aria-labelledby="next-heading" class="mt-10">
         <h2 id="next-heading" class="font-heading text-xl sm:text-2xl">Read next</h2>
         <ul class="mt-4 grid gap-2 md:grid-cols-2">
-          <li><a routerLink="/install" class="inline-flex min-h-11 items-center text-brand underline-offset-2 hover:underline">Install with pkg or ports</a></li>
-          <li><a routerLink="/rescue" class="inline-flex min-h-11 items-center text-brand underline-offset-2 hover:underline">Rescue tiers 0, 1, and 2</a></li>
-          <li><a routerLink="/mcp" class="inline-flex min-h-11 items-center text-brand underline-offset-2 hover:underline">MCP on localhost, not the public internet</a></li>
-          <li><a routerLink="/security" class="inline-flex min-h-11 items-center text-brand underline-offset-2 hover:underline">Secrets never through LLMs</a></li>
+          <li><a routerLink="/install" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Install with pkg or ports</a></li>
+          <li><a routerLink="/rescue" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Rescue tiers 0, 1, and 2</a></li>
+          <li><a routerLink="/mcp" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">MCP on localhost, not the public internet</a></li>
+          <li><a routerLink="/security" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Secrets never through LLMs</a></li>
         </ul>
       </section>
     </article>

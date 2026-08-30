@@ -39,11 +39,11 @@ make -C /usr/ports/sysutils/hawkeye-data install clean</code></pre>
       <section class="mt-8" aria-labelledby="paths-heading">
         <h2 id="paths-heading" class="font-heading text-xl sm:text-2xl">Where it lives after install</h2>
         <ul class="mt-4 list-disc space-y-2 pl-5">
-          <li>Normal PATH for a healthy host.</li>
+          <li>Normal PATH for a healthy host. When userland is missing, put <code class="rounded bg-surface px-1">/rescue</code> first.</li>
           <li><code class="rounded bg-surface px-1">/rescue</code> — so the surgeon is still there when <code class="rounded bg-surface px-1">/usr</code> is gone.</li>
-          <li><code class="rounded bg-surface px-1">/boot/hawkeye</code> — so it can be reached from the loader and early boot path.</li>
+          <li><code class="rounded bg-surface px-1">/boot/hawkeye</code> — knowledge and the early-boot path when <code class="rounded bg-surface px-1">/usr/local</code> is gone.</li>
         </ul>
-        <p class="mt-4">See <a routerLink="/rescue" class="text-brand underline-offset-2 hover:underline">Rescue</a> for what those paths mean in tiers 0, 1, and 2.</p>
+        <p class="mt-4">See <a routerLink="/rescue" class="text-brand underline-offset-2 hover:underline">Rescue</a> for tiers 0, 1, and 2 and the field examples.</p>
       </section>
     </article>
   `,
