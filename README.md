@@ -17,7 +17,7 @@ This repository is not the doctor. It explains Hawkeye and points at the other r
 - Home: meatball surgery on servers and desktops (diagnose + apply, works in rescue)
 - Install: pkg or port, two packages, /rescue and /boot/hawkeye
 - Rescue: tiers 0 / 1 / 2 (the aid station) and field examples (ZFS remount, zpool import, NIC, /rescue PATH)
-- MCP: stdio + Streamable HTTPS, localhost default
+- MCP docs: /docs/mcp (the protocol URL is https://hawkeye.revytechinc.com/mcp — Streamable HTTPS, bearer token on GET and POST; the SPA does not share GET /mcp)
 - Security: secrets never through LLMs
 
 ## Brand still

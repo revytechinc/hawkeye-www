@@ -18,7 +18,7 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', component: HomeComponent },
       { path: 'install', component: InstallComponent },
       { path: 'rescue', component: RescueComponent },
-      { path: 'mcp', component: McpComponent },
+      { path: 'docs/mcp', component: McpComponent },
       { path: 'security', component: SecurityComponent },
       { path: '**', redirectTo: '' },
     ],
