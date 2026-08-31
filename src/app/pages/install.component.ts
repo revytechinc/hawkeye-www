@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TerminalComponent } from '../terminal.component';
-import { PKG_INSTALL_SESSION } from '../terminal-sessions';
+import { HAWKEYE_SESSION, PKG_INSTALL_SESSION } from '../terminal-sessions';
 
 @Component({
   selector: 'app-install',
@@ -30,6 +30,17 @@ import { PKG_INSTALL_SESSION } from '../terminal-sessions';
         <app-terminal [session]="pkgInstall" label="pkg install terminal session" caption="tty — pkg" />
       </section>
 
+      <section class="mt-8 min-w-0" aria-labelledby="session-heading">
+        <h2 id="session-heading" class="font-heading text-xl sm:text-2xl">Then type hawkeye</h2>
+        <p class="mt-4">The product interface is an interactive session. Type <code class="rounded bg-surface px-1">hawkeye</code> — no subcommand. Panic path.</p>
+        <app-terminal [session]="hawkeye" label="hawkeye interactive session" caption="tty — hawkeye" />
+        <p class="mt-3 text-sm text-slate-600">
+          <code class="rounded bg-surface px-1">y</code> = apply (dry-run then confirm).
+          <code class="rounded bg-surface px-1">e</code> = <code class="rounded bg-surface px-1">$EDITOR</code> then confirm.
+          <code class="rounded bg-surface px-1">N</code> / Enter = stop.
+        </p>
+      </section>
+
       <section class="mt-8 min-w-0" aria-labelledby="ports-heading">
         <h2 id="ports-heading" class="font-heading text-xl sm:text-2xl">ports</h2>
         <p class="mt-4">The ports tree still has two ports. Users only name hawkeye for pkg. From ports:</p>
@@ -52,4 +63,5 @@ make -C /usr/ports/sysutils/hawkeye-data install clean</code></pre>
 })
 export class InstallComponent {
   readonly pkgInstall = PKG_INSTALL_SESSION;
+  readonly hawkeye = HAWKEYE_SESSION;
 }

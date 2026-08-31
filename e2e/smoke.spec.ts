@@ -1,8 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
 import path from 'node:path';
 import {
-  CONSULT_QUERY,
-  CONSULT_SESSION,
+  HAWKEYE_QUERY,
+  HAWKEYE_SESSION,
   DOCTOR_SESSION,
   PKG_INSTALL_SESSION,
 } from '../src/app/terminal-sessions';
@@ -29,6 +29,7 @@ const forbiddenInternals = [
   'llm skipped',
   'FTS skipped',
   'file:///',
+  'hawkeye consult',
 ];
 
 async function assertNoHorizontalOverflow(page: Page): Promise<void> {
@@ -59,20 +60,25 @@ async function openPrimaryNav(page: Page, isMobile: boolean): Promise<void> {
 }
 
 test.describe('Hawkeye public site', () => {
-  test('consult tty is the jail human reading, not JSON', () => {
-    expect(CONSULT_SESSION.startsWith(`$ hawkeye consult '${CONSULT_QUERY}'`)).toBeTruthy();
-    expect(CONSULT_SESSION).toContain('Remount ZFS root read-write');
-    expect(CONSULT_SESSION).toContain('Root is a ZFS dataset and is mounted read-only');
-    expect(CONSULT_SESSION).toContain('zfs set readonly=off "$ROOTDS"');
-    expect(CONSULT_SESSION).toContain('also:');
-    expect(CONSULT_SESSION).toContain('List, activate, or roll back a ZFS boot environment');
-    expect(CONSULT_SESSION).toContain('Apply these steps? [y/N/e]');
-    expect(CONSULT_SESSION).not.toContain('"query"');
-    expect(CONSULT_SESSION).not.toContain('"Title"');
-    expect(CONSULT_SESSION).not.toContain('"hits"');
-    expect(CONSULT_SESSION).not.toContain('"tier"');
-    expect(CONSULT_SESSION).not.toContain('llm skipped');
-    expect(CONSULT_SESSION).not.toContain('FTS skipped');
+  test('interactive hawkeye tty is the jail human reading, not consult or JSON', () => {
+    expect(HAWKEYE_SESSION.startsWith('$ hawkeye\nhawkeye\n> ')).toBeTruthy();
+    expect(HAWKEYE_SESSION).toContain(`> ${HAWKEYE_QUERY}`);
+    expect(HAWKEYE_SESSION).not.toContain('hawkeye consult');
+    expect(HAWKEYE_SESSION).toContain('Remount ZFS root read-write');
+    expect(HAWKEYE_SESSION).toContain('Root is a ZFS dataset and is mounted read-only');
+    expect(HAWKEYE_SESSION).toContain('zfs set readonly=off "$ROOTDS"');
+    expect(HAWKEYE_SESSION).toContain('also:');
+    expect(HAWKEYE_SESSION).toContain('List, activate, or roll back a ZFS boot environment');
+    expect(HAWKEYE_SESSION).toContain('Single-user versus multi-user');
+    expect(HAWKEYE_SESSION).toContain('Import a ZFS pool (readonly first, then unlock)');
+    expect(HAWKEYE_SESSION).toContain('Apply these steps? [y/N/e]');
+    expect(HAWKEYE_SESSION).not.toContain('"query"');
+    expect(HAWKEYE_SESSION).not.toContain('"Title"');
+    expect(HAWKEYE_SESSION).not.toContain('"hits"');
+    expect(HAWKEYE_SESSION).not.toContain('"tier"');
+    expect(HAWKEYE_SESSION).not.toContain('"Rank"');
+    expect(HAWKEYE_SESSION).not.toContain('llm skipped');
+    expect(HAWKEYE_SESSION).not.toContain('FTS skipped');
     expect(DOCTOR_SESSION).toContain('$ hawkeye doctor');
     expect(DOCTOR_SESSION).toContain('hawkeye doctor: healthy');
     expect(DOCTOR_SESSION).toContain('knowledge kit open');
@@ -89,15 +95,18 @@ test.describe('Hawkeye public site', () => {
     await expect(page.getByText(/not the doctor/i)).toBeVisible();
     await expect(page.getByRole('heading', { name: 'What this site is not' })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Field examples' })).toBeVisible();
-    const homeConsult = page.locator('pre').filter({ hasText: `$ hawkeye consult '${CONSULT_QUERY}'` });
-    await expect(homeConsult).toBeVisible();
-    await expect(homeConsult).toHaveText(CONSULT_SESSION);
-    await expect(homeConsult).toContainText('Apply these steps? [y/N/e]');
+    const homeSession = page.locator('pre').filter({ hasText: `> ${HAWKEYE_QUERY}` });
+    await expect(homeSession).toBeVisible();
+    await expect(homeSession).toHaveText(HAWKEYE_SESSION);
+    await expect(homeSession).toContainText('$ hawkeye');
+    await expect(homeSession).toContainText(`> ${HAWKEYE_QUERY}`);
+    await expect(homeSession).toContainText('Apply these steps? [y/N/e]');
+    await expect(homeSession).not.toContainText('hawkeye consult');
     await expect(page.getByText(/Host commands, not a consult transcript/i)).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Bring up a NIC' })).toHaveCount(0);
-    const homeConsultBox = await homeConsult.boundingBox();
-    expect(homeConsultBox, 'consult session is present').toBeTruthy();
-    expect(homeConsultBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+    const homeSessionBox = await homeSession.boundingBox();
+    expect(homeSessionBox, 'interactive hawkeye session is present').toBeTruthy();
+    expect(homeSessionBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
     await assertNoInternals(page);
     await expect(page.locator('body')).not.toContainText('Bearer ');
     await expect(page.getByRole('link', { name: /MCP docs/i })).toHaveAttribute('href', '/docs/mcp');
@@ -162,6 +171,10 @@ test.describe('Hawkeye public site', () => {
     await expect(page.getByText(/install both/i)).toHaveCount(0);
     await expect(page.locator('body')).not.toContainText('revytech-hawkeye');
     await expect(page.getByText('/usr/ports/sysutils/hawkeye-data')).toBeVisible();
+    const installSession = page.locator('pre').filter({ hasText: `> ${HAWKEYE_QUERY}` });
+    await expect(installSession).toBeVisible();
+    await expect(installSession).toHaveText(HAWKEYE_SESSION);
+    await expect(installSession).not.toContainText('hawkeye consult');
     const pre = page.locator('pre').first();
     await expect(pre).toBeVisible();
     const preBox = await pre.boundingBox();
@@ -174,12 +187,14 @@ test.describe('Hawkeye public site', () => {
     await page.goto('/rescue');
     await expect(page.getByText('TIER 0')).toBeVisible();
     await expect(page.getByText(/install both/i)).toHaveCount(0);
-    const rescueConsult = page.locator('pre').filter({ hasText: `$ hawkeye consult '${CONSULT_QUERY}'` });
-    await expect(rescueConsult).toBeVisible();
-    await expect(rescueConsult).toHaveText(CONSULT_SESSION);
-    await expect(rescueConsult).toContainText('Apply these steps? [y/N/e]');
-    await expect(page.getByText('y = apply (still dry-run then confirm to land)')).toBeVisible();
-    await expect(page.getByText('e = edit the plan in $EDITOR then confirm')).toBeVisible();
+    const rescueSession = page.locator('pre').filter({ hasText: `> ${HAWKEYE_QUERY}` });
+    await expect(rescueSession).toBeVisible();
+    await expect(rescueSession).toHaveText(HAWKEYE_SESSION);
+    await expect(rescueSession).toContainText('$ hawkeye');
+    await expect(rescueSession).toContainText('Apply these steps? [y/N/e]');
+    await expect(rescueSession).not.toContainText('hawkeye consult');
+    await expect(page.getByText('y = apply (dry-run then confirm)')).toBeVisible();
+    await expect(page.getByText('e = $EDITOR then confirm')).toBeVisible();
     await expect(page.getByText('N / Enter = stop')).toBeVisible();
     const rescueDoctor = page.locator('pre').filter({ hasText: '$ hawkeye doctor' });
     await expect(rescueDoctor).toBeVisible();
@@ -192,9 +207,9 @@ test.describe('Hawkeye public site', () => {
       await page.setViewportSize({ width: 320, height: 812 });
     }
     await assertNoHorizontalOverflow(page);
-    const consultBox = await rescueConsult.boundingBox();
-    expect(consultBox, 'consult tty is present').toBeTruthy();
-    expect(consultBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+    const sessionBox = await rescueSession.boundingBox();
+    expect(sessionBox, 'interactive hawkeye tty is present').toBeTruthy();
+    expect(sessionBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
     await page.setViewportSize({ width: isMobile ? 375 : 1280, height: isMobile ? 812 : 800 });
     await page.screenshot({ path: path.join(shot, `rescue-${isMobile ? 'mobile' : 'desktop'}.png`), fullPage: true });
 
