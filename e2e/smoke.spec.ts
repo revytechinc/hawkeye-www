@@ -67,10 +67,10 @@ test.describe('Hawkeye public site', () => {
     expect(CONSULT_SESSION).toContain('also:');
     expect(CONSULT_SESSION).toContain('List, activate, or roll back a ZFS boot environment');
     expect(CONSULT_SESSION).toContain('Apply these steps? [y/N/e]');
-    expect(CONSULT_SESSION).not.toContain('{');
     expect(CONSULT_SESSION).not.toContain('"query"');
     expect(CONSULT_SESSION).not.toContain('"Title"');
     expect(CONSULT_SESSION).not.toContain('"hits"');
+    expect(CONSULT_SESSION).not.toContain('"tier"');
     expect(CONSULT_SESSION).not.toContain('llm skipped');
     expect(CONSULT_SESSION).not.toContain('FTS skipped');
     expect(DOCTOR_SESSION).toContain('$ hawkeye doctor');
