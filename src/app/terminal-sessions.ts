@@ -44,6 +44,7 @@ also:
 Apply these steps? [y/N/e]`;
 
 /**
+ * Ops / install health of the package. Not a rescue demo and not a field example.
  * Real doctor preamble only. No JSON, no pid number, no file:/// sqlite URL.
  */
 export const DOCTOR_SESSION = `$ hawkeye doctor

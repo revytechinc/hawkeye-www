@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TerminalComponent } from '../terminal.component';
-import { HAWKEYE_SESSION, PKG_INSTALL_SESSION } from '../terminal-sessions';
+import { DOCTOR_SESSION, HAWKEYE_SESSION, PKG_INSTALL_SESSION } from '../terminal-sessions';
 
 @Component({
   selector: 'app-install',
@@ -28,6 +28,12 @@ import { HAWKEYE_SESSION, PKG_INSTALL_SESSION } from '../terminal-sessions';
         <h2 id="pkg-heading" class="font-heading text-xl sm:text-2xl">pkg</h2>
         <p class="mt-4">When the package is published to the CloudBSD/FreeBSD package set:</p>
         <app-terminal [session]="pkgInstall" label="pkg install terminal session" caption="tty — pkg" />
+      </section>
+
+      <section class="mt-8 min-w-0" aria-labelledby="health-heading">
+        <h2 id="health-heading" class="font-heading text-xl sm:text-2xl">Package health</h2>
+        <p class="mt-4">After install, <code class="rounded bg-surface px-1">hawkeye doctor</code> checks that the package and knowledge kit are healthy. That is ops, not the rescue path.</p>
+        <app-terminal [session]="doctor" label="hawkeye doctor terminal session" caption="tty — hawkeye doctor" />
       </section>
 
       <section class="mt-8 min-w-0" aria-labelledby="session-heading">
@@ -63,5 +69,6 @@ make -C /usr/ports/sysutils/hawkeye-data install clean</code></pre>
 })
 export class InstallComponent {
   readonly pkgInstall = PKG_INSTALL_SESSION;
+  readonly doctor = DOCTOR_SESSION;
   readonly hawkeye = HAWKEYE_SESSION;
 }

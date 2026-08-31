@@ -79,11 +79,14 @@ test.describe('Hawkeye public site', () => {
     expect(HAWKEYE_SESSION).not.toContain('"Rank"');
     expect(HAWKEYE_SESSION).not.toContain('llm skipped');
     expect(HAWKEYE_SESSION).not.toContain('FTS skipped');
+    expect(HAWKEYE_SESSION).not.toContain('hawkeye doctor');
     expect(DOCTOR_SESSION).toContain('$ hawkeye doctor');
     expect(DOCTOR_SESSION).toContain('hawkeye doctor: healthy');
     expect(DOCTOR_SESSION).toContain('knowledge kit open');
     expect(DOCTOR_SESSION).not.toContain('file:///');
     expect(DOCTOR_SESSION).not.toContain('{');
+    expect(DOCTOR_SESSION).not.toContain('ZFS root is read-only');
+    expect(DOCTOR_SESSION).not.toContain('Apply these steps?');
     expect(PKG_INSTALL_SESSION).toBe('# pkg install hawkeye');
     expect(PKG_INSTALL_SESSION).not.toContain('hawkeye-data');
   });
@@ -102,6 +105,7 @@ test.describe('Hawkeye public site', () => {
     await expect(homeSession).toContainText(`> ${HAWKEYE_QUERY}`);
     await expect(homeSession).toContainText('Apply these steps? [y/N/e]');
     await expect(homeSession).not.toContainText('hawkeye consult');
+    await expect(page.locator('pre').filter({ hasText: '$ hawkeye doctor' })).toHaveCount(0);
     await expect(page.getByText(/Host commands, not a consult transcript/i)).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Bring up a NIC' })).toHaveCount(0);
     const homeSessionBox = await homeSession.boundingBox();
@@ -175,6 +179,12 @@ test.describe('Hawkeye public site', () => {
     await expect(installSession).toBeVisible();
     await expect(installSession).toHaveText(HAWKEYE_SESSION);
     await expect(installSession).not.toContainText('hawkeye consult');
+    await expect(page.getByRole('heading', { name: 'Package health' })).toBeVisible();
+    const installDoctor = page.locator('pre').filter({ hasText: '$ hawkeye doctor' });
+    await expect(installDoctor).toBeVisible();
+    await expect(installDoctor).toHaveText(DOCTOR_SESSION);
+    await expect(installDoctor).not.toContainText('ZFS root is read-only');
+    await expect(installDoctor).not.toContainText('Apply these steps?');
     const pre = page.locator('pre').first();
     await expect(pre).toBeVisible();
     const preBox = await pre.boundingBox();
@@ -196,9 +206,8 @@ test.describe('Hawkeye public site', () => {
     await expect(page.getByText('y = apply (dry-run then confirm)')).toBeVisible();
     await expect(page.getByText('e = $EDITOR then confirm')).toBeVisible();
     await expect(page.getByText('N / Enter = stop')).toBeVisible();
-    const rescueDoctor = page.locator('pre').filter({ hasText: '$ hawkeye doctor' });
-    await expect(rescueDoctor).toBeVisible();
-    await expect(rescueDoctor).toHaveText(DOCTOR_SESSION);
+    await expect(page.locator('pre').filter({ hasText: '$ hawkeye doctor' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Package health' })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'What a hit contains' })).toHaveCount(0);
     await expect(page.getByText('zpool import -o readonly=on -N POOL')).toHaveCount(0);
     await expect(page.getByText("/rescue/sh -c 'echo rescue-ok'")).toHaveCount(0);
