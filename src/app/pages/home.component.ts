@@ -4,11 +4,12 @@
  */
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ConsultSessionComponent } from '../consult-session.component';
+import { TerminalComponent } from '../terminal.component';
+import { CONSULT_SESSION, DOCTOR_SESSION } from '../terminal-sessions';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, ConsultSessionComponent],
+  imports: [RouterLink, TerminalComponent],
   template: `
     <article class="min-w-0">
       <header class="-mx-4 -mt-8 mb-10 bg-gradient-to-br from-navy via-navy-mid to-navy-deep px-4 py-8 text-white sm:-mt-10 sm:py-12 md:rounded-b-2xl">
@@ -50,11 +51,17 @@ import { ConsultSessionComponent } from '../consult-session.component';
 
       <section aria-labelledby="examples-heading" class="mt-10 min-w-0">
         <h2 id="examples-heading" class="font-heading text-xl sm:text-2xl">Field examples</h2>
-        <p class="mt-3 max-w-3xl text-sm text-slate-600">What the operator typed on the host. <code class="rounded bg-surface px-1">hawkeye consult</code> prints JSON. This session was captured 2026-08-30 on a Hawkeye jail; the local LLM was skipped.</p>
-        <app-consult-session />
+        <p class="mt-3 max-w-3xl text-sm text-slate-600">What the operator typed on the host, and what printed. Not a JSON dump.</p>
+        <app-terminal [session]="consult" label="hawkeye consult terminal session" caption="tty — hawkeye consult" />
+        <p class="mt-3 max-w-3xl text-sm text-slate-600">
+          <code class="rounded bg-surface px-1">y</code> = apply (still dry-run then confirm to land).
+          <code class="rounded bg-surface px-1">e</code> = edit the plan in <code class="rounded bg-surface px-1">$EDITOR</code> then confirm.
+          <code class="rounded bg-surface px-1">N</code> / Enter = stop.
+        </p>
+        <app-terminal [session]="doctor" label="hawkeye doctor terminal session" caption="tty — hawkeye doctor" />
         <p class="mt-4 max-w-3xl text-sm">
-          <a routerLink="/rescue" fragment="hit-contains" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Rescue</a>
-          shows what one of those hits contains — the host commands inside a playbook.
+          <a routerLink="/rescue" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Rescue</a>
+          has the same host tty.
         </p>
       </section>
 
@@ -67,7 +74,7 @@ import { ConsultSessionComponent } from '../consult-session.component';
           </a>
           <a class="min-w-0 rounded-xl border border-line bg-panel p-5 hover:border-brand" href="https://github.com/revytechinc/hawkeye-data">
             <h3 class="font-heading text-lg text-brand">hawkeye-data</h3>
-            <p class="mt-2 text-sm">The kit: playbooks and knowledge in the rucksack.</p>
+            <p class="mt-2 text-sm">The kit: playbooks and knowledge in the rucksack. Installs as a RUN_DEPENDS of hawkeye.</p>
           </a>
           <a class="min-w-0 rounded-xl border border-line bg-panel p-5 hover:border-brand" href="https://github.com/revytechinc/hawkeye-www">
             <h3 class="font-heading text-lg text-brand">hawkeye-www</h3>
@@ -88,4 +95,7 @@ import { ConsultSessionComponent } from '../consult-session.component';
     </article>
   `,
 })
-export class HomeComponent {}
+export class HomeComponent {
+  readonly consult = CONSULT_SESSION;
+  readonly doctor = DOCTOR_SESSION;
+}
