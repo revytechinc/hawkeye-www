@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TerminalComponent } from '../terminal.component';
-import { CONSULT_SESSION, DOCTOR_SESSION } from '../terminal-sessions';
+import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
 
 @Component({
   selector: 'app-home',
@@ -51,11 +51,11 @@ import { CONSULT_SESSION, DOCTOR_SESSION } from '../terminal-sessions';
 
       <section aria-labelledby="examples-heading" class="mt-10 min-w-0">
         <h2 id="examples-heading" class="font-heading text-xl sm:text-2xl">Field examples</h2>
-        <p class="mt-3 max-w-3xl text-sm text-slate-600">What the operator typed on the host, and what printed. Not a JSON dump.</p>
-        <app-terminal [session]="consult" label="hawkeye consult terminal session" caption="tty — hawkeye consult" />
+        <p class="mt-3 max-w-3xl text-sm text-slate-600">The product interface is an interactive session. Type <code class="rounded bg-surface px-1">hawkeye</code> — no subcommand. Panic path.</p>
+        <app-terminal [session]="hawkeye" label="hawkeye interactive session" caption="tty — hawkeye" />
         <p class="mt-3 max-w-3xl text-sm text-slate-600">
-          <code class="rounded bg-surface px-1">y</code> = apply (still dry-run then confirm to land).
-          <code class="rounded bg-surface px-1">e</code> = edit the plan in <code class="rounded bg-surface px-1">$EDITOR</code> then confirm.
+          <code class="rounded bg-surface px-1">y</code> = apply (dry-run then confirm).
+          <code class="rounded bg-surface px-1">e</code> = <code class="rounded bg-surface px-1">$EDITOR</code> then confirm.
           <code class="rounded bg-surface px-1">N</code> / Enter = stop.
         </p>
         <app-terminal [session]="doctor" label="hawkeye doctor terminal session" caption="tty — hawkeye doctor" />
@@ -96,6 +96,6 @@ import { CONSULT_SESSION, DOCTOR_SESSION } from '../terminal-sessions';
   `,
 })
 export class HomeComponent {
-  readonly consult = CONSULT_SESSION;
+  readonly hawkeye = HAWKEYE_SESSION;
   readonly doctor = DOCTOR_SESSION;
 }

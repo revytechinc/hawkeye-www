@@ -3,15 +3,18 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
-/** Query the operator typed on the hawkeye jail. */
-export const CONSULT_QUERY = 'ZFS root is read-only after boot';
+/** Query the operator typed at the hawkeye prompt. */
+export const HAWKEYE_QUERY = 'ZFS root is read-only after boot';
 
 /**
- * Exact human tty captured on the hawkeye jail, plus the apply prompt
- * as the operator would see it in the same screen-capture.
- * Default `hawkeye consult` still dumps JSON today — do not put that JSON here.
+ * Product interface: bare `hawkeye` (no subcommand), like `ollama run`.
+ * Panic path — operators should not have to type a quoted consult line.
+ * Remount playbook body is the jail capture. [y/N/e] stays in the tty.
+ * Do not put JSON here.
  */
-export const CONSULT_SESSION = `$ hawkeye consult '${CONSULT_QUERY}'
+export const HAWKEYE_SESSION = `$ hawkeye
+hawkeye
+> ${HAWKEYE_QUERY}
 
 Remount ZFS root read-write
   Root is a ZFS dataset and is mounted read-only (single-user, panic remount,
