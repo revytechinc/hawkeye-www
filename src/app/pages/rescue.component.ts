@@ -4,12 +4,12 @@
  */
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ConsultSessionComponent } from '../consult-session.component';
-import { REMOUNT_ZFS_HIT_COMMANDS } from '../consult-session';
+import { TerminalComponent } from '../terminal.component';
+import { CONSULT_SESSION, DOCTOR_SESSION } from '../terminal-sessions';
 
 @Component({
   selector: 'app-rescue',
-  imports: [RouterLink, ConsultSessionComponent],
+  imports: [RouterLink, TerminalComponent],
   template: `
     <article class="min-w-0">
       <h1 class="font-heading text-3xl sm:text-4xl">Rescue tiers</h1>
@@ -29,24 +29,20 @@ import { REMOUNT_ZFS_HIT_COMMANDS } from '../consult-session';
         <li class="min-w-0 rounded-xl border border-line bg-panel p-5 sm:p-6">
           <p class="text-xs font-semibold tracking-[0.2em] text-brand">TIER 2</p>
           <h2 class="mt-1 font-heading text-xl sm:text-2xl">Installed host</h2>
-          <p class="mt-3">The system is multi-user and <code class="rounded bg-surface px-1">pkg</code> works. Install both <strong>hawkeye</strong> and <strong>hawkeye-data</strong>.</p>
+          <p class="mt-3">The system is multi-user and <code class="rounded bg-surface px-1">pkg</code> works. Type <code class="rounded bg-surface px-1">pkg install hawkeye</code>. The knowledge kit (hawkeye-data) comes along as a RUN_DEPENDS.</p>
         </li>
       </ol>
 
       <section class="mt-12 min-w-0" aria-labelledby="examples-heading">
         <h2 id="examples-heading" class="scroll-mt-24 font-heading text-2xl sm:text-3xl">Field examples</h2>
-        <p class="mt-3 max-w-3xl">What the operator typed. <code class="rounded bg-surface px-1">hawkeye consult</code> lists knowledge-kit hits as JSON. This session was captured 2026-08-30 on a Hawkeye jail; the local LLM was skipped.</p>
-        <app-consult-session />
-
-        <details id="hit-contains" class="mt-6 min-w-0 scroll-mt-24 rounded-xl border border-line bg-panel">
-          <summary class="flex min-h-12 cursor-pointer list-inside items-center px-5 py-3 font-heading text-lg">
-            What a hit contains — Remount ZFS root read-write
-          </summary>
-          <div class="min-w-0 border-t border-line px-5 pb-5">
-            <p class="mt-3 text-sm">Host commands from that knowledge-kit playbook. Consult lists the hit; apply still runs on the host.</p>
-            <pre class="mt-3 max-w-full overflow-x-auto whitespace-pre-wrap break-words rounded-lg bg-navy p-4 text-sm text-cyan" tabindex="0"><code>{{ remountZfs }}</code></pre>
-          </div>
-        </details>
+        <p class="mt-3 max-w-3xl">What the operator typed, and what printed. Not a JSON dump.</p>
+        <app-terminal [session]="consult" label="hawkeye consult terminal session" caption="tty — hawkeye consult" />
+        <p class="mt-3 max-w-3xl text-sm">
+          <code class="rounded bg-surface px-1">y</code> = apply (still dry-run then confirm to land).
+          <code class="rounded bg-surface px-1">e</code> = edit the plan in <code class="rounded bg-surface px-1">$EDITOR</code> then confirm.
+          <code class="rounded bg-surface px-1">N</code> / Enter = stop.
+        </p>
+        <app-terminal [session]="doctor" label="hawkeye doctor terminal session" caption="tty — hawkeye doctor" />
       </section>
 
       <p class="mt-8 max-w-3xl">Apply happens on the host. Read <a routerLink="/security" class="text-brand underline-offset-2 hover:underline">Security</a> before wiring any model in.</p>
@@ -54,5 +50,6 @@ import { REMOUNT_ZFS_HIT_COMMANDS } from '../consult-session';
   `,
 })
 export class RescueComponent {
-  readonly remountZfs = REMOUNT_ZFS_HIT_COMMANDS;
+  readonly consult = CONSULT_SESSION;
+  readonly doctor = DOCTOR_SESSION;
 }
