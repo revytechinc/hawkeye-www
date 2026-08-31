@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import path from 'node:path';
+import { CONSULT_PROMPT, CONSULT_QUERY, formatConsultSession } from '../src/app/consult-session';
 
 const shot = path.join('artifacts', 'playwright');
 
@@ -32,6 +33,18 @@ async function openPrimaryNav(page: Page, isMobile: boolean): Promise<void> {
 }
 
 test.describe('Hawkeye public site', () => {
+  test('consult session is the captured jail JSON, not invented ranks', () => {
+    const session = formatConsultSession();
+    expect(session.startsWith(`${CONSULT_PROMPT}\n{`)).toBeTruthy();
+    expect(session).toContain(`"query": "${CONSULT_QUERY}"`);
+    expect(session).toContain('"tier": 1');
+    expect(session).toContain('"Title": "Remount ZFS root read-write"');
+    expect(session).toContain('llm skipped: local llm model is not configured');
+    expect(session).not.toContain('"rank"');
+    expect(session).not.toContain('"Rank"');
+    expect(session).not.toContain('"score"');
+  });
+
   test('home explains the field surgeon and is not a doctor UI', async ({ page }, testInfo) => {
     const isMobile = testInfo.project.name === 'mobile';
     await page.goto('/');
@@ -39,6 +52,15 @@ test.describe('Hawkeye public site', () => {
     await expect(page.getByText(/not the doctor/i)).toBeVisible();
     await expect(page.getByRole('heading', { name: 'What this site is not' })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Field examples' })).toBeVisible();
+    const homeConsult = page.locator('pre').filter({ hasText: CONSULT_PROMPT });
+    await expect(homeConsult).toBeVisible();
+    await expect(homeConsult).toHaveText(formatConsultSession());
+    await expect(page.getByText(/Host commands, not a consult transcript/i)).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Bring up a NIC' })).toHaveCount(0);
+    const homeConsultBox = await homeConsult.boundingBox();
+    expect(homeConsultBox, 'consult session is present').toBeTruthy();
+    expect(homeConsultBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+    await expect(page.locator('body')).not.toContainText('Bearer ');
     await expect(page.getByRole('link', { name: /MCP docs/i })).toHaveAttribute('href', '/docs/mcp');
     await expect(page.locator('body')).not.toContainText('MCP on localhost');
     await expect(page.locator('body')).not.toContainText('not a public MCP service');
@@ -90,6 +112,8 @@ test.describe('Hawkeye public site', () => {
       }
     }
 
+    await page.setViewportSize({ width: isMobile ? 375 : 1280, height: isMobile ? 812 : 800 });
+
     await page.goto('/install');
     await expect(page.getByText('pkg install hawkeye hawkeye-data')).toBeVisible();
     await expect(page.locator('body')).not.toContainText('revytech-hawkeye');
@@ -104,10 +128,32 @@ test.describe('Hawkeye public site', () => {
 
     await page.goto('/rescue');
     await expect(page.getByText('TIER 0')).toBeVisible();
+    await expect(page.getByText(CONSULT_PROMPT)).toBeVisible();
+    await expect(page.locator('pre').filter({ hasText: CONSULT_PROMPT })).toHaveText(formatConsultSession());
+    await expect(page.getByText(`"query": "${CONSULT_QUERY}"`)).toBeVisible();
+    await expect(page.getByText('llm skipped: local llm model is not configured')).toBeVisible();
+    await expect(page.getByText('zpool import -o readonly=on -N POOL')).toHaveCount(0);
+    await expect(page.getByText("/rescue/sh -c 'echo rescue-ok'")).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Bring up a NIC' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: '/rescue when userland is missing' })).toHaveCount(0);
+    const hitSummary = page.getByText('What a hit contains — Remount ZFS root read-write');
+    await expect(hitSummary).toBeVisible();
+    const hitSummaryBox = await hitSummary.boundingBox();
+    expect(hitSummaryBox, 'hit-contains summary is present').toBeTruthy();
+    expect(hitSummaryBox!.height).toBeGreaterThanOrEqual(48);
+    await expect(page.getByText('zfs set readonly=off')).toBeHidden();
+    await hitSummary.click();
     await expect(page.getByText('zfs set readonly=off')).toBeVisible();
-    await expect(page.getByText('zpool import -o readonly=on -N POOL')).toBeVisible();
-    await expect(page.getByText('dhclient')).toBeVisible();
-    await expect(page.getByText("/rescue/sh -c 'echo rescue-ok'")).toBeVisible();
+    const remountPre = page.locator('pre').filter({ hasText: 'zfs set readonly=off' });
+    await expect(remountPre).toBeVisible();
+    if (isMobile) {
+      await page.setViewportSize({ width: 320, height: 812 });
+    }
+    await assertNoHorizontalOverflow(page);
+    const remountBox = await remountPre.boundingBox();
+    expect(remountBox, 'remount playbook block is present').toBeTruthy();
+    expect(remountBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+    await page.setViewportSize({ width: isMobile ? 375 : 1280, height: isMobile ? 812 : 800 });
     await page.screenshot({ path: path.join(shot, `rescue-${isMobile ? 'mobile' : 'desktop'}.png`), fullPage: true });
 
     await page.goto('/docs/mcp');

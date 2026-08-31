@@ -70,6 +70,7 @@
   pre {
     max-width: 100%;
     overflow-x: auto;
+    overflow-wrap: anywhere;
     -webkit-overflow-scrolling: touch;
   }
   table {
