@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TerminalComponent } from '../terminal.component';
-import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
+import { HAWKEYE_SESSION } from '../terminal-sessions';
 
 @Component({
   selector: 'app-home',
@@ -58,7 +58,6 @@ import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
           <code class="rounded bg-surface px-1">e</code> = <code class="rounded bg-surface px-1">$EDITOR</code> then confirm.
           <code class="rounded bg-surface px-1">N</code> / Enter = stop.
         </p>
-        <app-terminal [session]="doctor" label="hawkeye doctor terminal session" caption="tty — hawkeye doctor" />
         <p class="mt-4 max-w-3xl text-sm">
           <a routerLink="/rescue" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Rescue</a>
           has the same host tty.
@@ -97,5 +96,4 @@ import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
 })
 export class HomeComponent {
   readonly hawkeye = HAWKEYE_SESSION;
-  readonly doctor = DOCTOR_SESSION;
 }

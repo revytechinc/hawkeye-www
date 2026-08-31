@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TerminalComponent } from '../terminal.component';
-import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
+import { HAWKEYE_SESSION } from '../terminal-sessions';
 
 @Component({
   selector: 'app-rescue',
@@ -42,7 +42,6 @@ import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
           <code class="rounded bg-surface px-1">e</code> = <code class="rounded bg-surface px-1">$EDITOR</code> then confirm.
           <code class="rounded bg-surface px-1">N</code> / Enter = stop.
         </p>
-        <app-terminal [session]="doctor" label="hawkeye doctor terminal session" caption="tty — hawkeye doctor" />
       </section>
 
       <p class="mt-8 max-w-3xl">Apply happens on the host. Read <a routerLink="/security" class="text-brand underline-offset-2 hover:underline">Security</a> before wiring any model in.</p>
@@ -51,5 +50,4 @@ import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
 })
 export class RescueComponent {
   readonly hawkeye = HAWKEYE_SESSION;
-  readonly doctor = DOCTOR_SESSION;
 }
