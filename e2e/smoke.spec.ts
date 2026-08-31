@@ -3,9 +3,41 @@ import path from 'node:path';
 import {
   HAWKEYE_QUERY,
   HAWKEYE_SESSION,
-  DOCTOR_SESSION,
   PKG_INSTALL_SESSION,
 } from '../src/app/terminal-sessions';
+
+/** script(1) on pkg hawkeye-0.1.0_4 (SHA eaf77537). Healthy jail: first-look silent, then `>`. */
+const JAIL_SCRIPT_SESSION = `$ hawkeye
+hawkeye
+> ${HAWKEYE_QUERY}
+Remount ZFS root read-write
+  Root is a ZFS dataset and is mounted read-only (single-user, panic
+  remount, zfs readonly=on, or a readonly pool import). You need to edit
+  files, write logs, or run tools that create files.
+
+  export PATH=/rescue:/sbin:/bin:/usr/sbin:/usr/bin
+  mount -p
+  df -T /
+  zfs list -o name,mounted,mountpoint,readonly,canmount
+  ROOTDS=$(mount -p | awk '$2=="/" {print $1}')
+  echo "root dataset: $ROOTDS"
+  zfs get -o property,value name,readonly,mounted,encryption,keystatus "$ROOTDS"
+  zpool get readonly "$(echo "$ROOTDS" | awk -F/ '{print $1}')"
+  zfs set readonly=off "$ROOTDS"
+  zfs mount -u "$ROOTDS"
+  mount -u -o rw /
+  mount -p | awk '$2=="/" {print}'
+
+also:
+  List, activate, or roll back a ZFS boot environment
+  Single-user versus multi-user
+  Compare fstab to mounted filesystems
+  Import a ZFS pool (readonly first, then unlock)
+  Remount UFS root read-write
+  rc.conf enable=YES but script or binary missing
+  Bring up a NIC with ifconfig, dhclient, or service netif
+
+Apply these steps? [y/N/e]`;
 
 const shot = path.join('artifacts', 'playwright');
 
@@ -30,6 +62,9 @@ const forbiddenInternals = [
   'FTS skipped',
   'file:///',
   'hawkeye consult',
+  'DEGRADED',
+  'sshd-missing',
+  '${name}',
 ];
 
 async function assertNoHorizontalOverflow(page: Page): Promise<void> {
@@ -61,16 +96,27 @@ async function openPrimaryNav(page: Page, isMobile: boolean): Promise<void> {
 
 test.describe('Hawkeye public site', () => {
   test('interactive hawkeye tty is the jail human reading, not consult or JSON', () => {
+    expect(HAWKEYE_SESSION).toBe(JAIL_SCRIPT_SESSION);
     expect(HAWKEYE_SESSION.startsWith('$ hawkeye\nhawkeye\n> ')).toBeTruthy();
+    expect(HAWKEYE_SESSION).toMatch(/^\$ hawkeye\nhawkeye\n> /);
     expect(HAWKEYE_SESSION).toContain(`> ${HAWKEYE_QUERY}`);
     expect(HAWKEYE_SESSION).not.toContain('hawkeye consult');
+    expect(HAWKEYE_SESSION).not.toContain('hawkeye doctor');
+    expect(HAWKEYE_SESSION).not.toContain('DEGRADED');
+    expect(HAWKEYE_SESSION).not.toContain('sshd-missing');
+    expect(HAWKEYE_SESSION).not.toContain('${name}');
+    expect(HAWKEYE_SESSION).not.toContain('If the pool was imported readonly=on');
     expect(HAWKEYE_SESSION).toContain('Remount ZFS root read-write');
-    expect(HAWKEYE_SESSION).toContain('Root is a ZFS dataset and is mounted read-only');
+    expect(HAWKEYE_SESSION).toContain('You need to edit\n  files, write logs, or run tools that create files.');
     expect(HAWKEYE_SESSION).toContain('zfs set readonly=off "$ROOTDS"');
     expect(HAWKEYE_SESSION).toContain('also:');
     expect(HAWKEYE_SESSION).toContain('List, activate, or roll back a ZFS boot environment');
     expect(HAWKEYE_SESSION).toContain('Single-user versus multi-user');
+    expect(HAWKEYE_SESSION).toContain('Compare fstab to mounted filesystems');
     expect(HAWKEYE_SESSION).toContain('Import a ZFS pool (readonly first, then unlock)');
+    expect(HAWKEYE_SESSION).toContain('Remount UFS root read-write');
+    expect(HAWKEYE_SESSION).toContain('rc.conf enable=YES but script or binary missing');
+    expect(HAWKEYE_SESSION).toContain('Bring up a NIC with ifconfig, dhclient, or service netif');
     expect(HAWKEYE_SESSION).toContain('Apply these steps? [y/N/e]');
     expect(HAWKEYE_SESSION).not.toContain('"query"');
     expect(HAWKEYE_SESSION).not.toContain('"Title"');
@@ -79,11 +125,6 @@ test.describe('Hawkeye public site', () => {
     expect(HAWKEYE_SESSION).not.toContain('"Rank"');
     expect(HAWKEYE_SESSION).not.toContain('llm skipped');
     expect(HAWKEYE_SESSION).not.toContain('FTS skipped');
-    expect(DOCTOR_SESSION).toContain('$ hawkeye doctor');
-    expect(DOCTOR_SESSION).toContain('hawkeye doctor: healthy');
-    expect(DOCTOR_SESSION).toContain('knowledge kit open');
-    expect(DOCTOR_SESSION).not.toContain('file:///');
-    expect(DOCTOR_SESSION).not.toContain('{');
     expect(PKG_INSTALL_SESSION).toBe('# pkg install hawkeye');
     expect(PKG_INSTALL_SESSION).not.toContain('hawkeye-data');
   });
@@ -102,6 +143,13 @@ test.describe('Hawkeye public site', () => {
     await expect(homeSession).toContainText(`> ${HAWKEYE_QUERY}`);
     await expect(homeSession).toContainText('Apply these steps? [y/N/e]');
     await expect(homeSession).not.toContainText('hawkeye consult');
+    await expect(homeSession).toContainText('You need to edit');
+    await expect(homeSession).toContainText('files, write logs, or run tools that create files.');
+    await expect(homeSession).toContainText('Compare fstab to mounted filesystems');
+    await expect(homeSession).not.toContainText('DEGRADED');
+    await expect(homeSession).not.toContainText('sshd-missing');
+    await expect(page.locator('pre').filter({ hasText: '$ hawkeye doctor' })).toHaveCount(0);
+    await expect(page.getByText('y = dry-run then confirm')).toBeVisible();
     await expect(page.getByText(/Host commands, not a consult transcript/i)).toHaveCount(0);
     await expect(page.getByRole('link', { name: 'Bring up a NIC' })).toHaveCount(0);
     const homeSessionBox = await homeSession.boundingBox();
@@ -175,6 +223,8 @@ test.describe('Hawkeye public site', () => {
     await expect(installSession).toBeVisible();
     await expect(installSession).toHaveText(HAWKEYE_SESSION);
     await expect(installSession).not.toContainText('hawkeye consult');
+    await expect(page.locator('pre').filter({ hasText: '$ hawkeye doctor' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Package health' })).toHaveCount(0);
     const pre = page.locator('pre').first();
     await expect(pre).toBeVisible();
     const preBox = await pre.boundingBox();
@@ -193,12 +243,11 @@ test.describe('Hawkeye public site', () => {
     await expect(rescueSession).toContainText('$ hawkeye');
     await expect(rescueSession).toContainText('Apply these steps? [y/N/e]');
     await expect(rescueSession).not.toContainText('hawkeye consult');
-    await expect(page.getByText('y = apply (dry-run then confirm)')).toBeVisible();
-    await expect(page.getByText('e = $EDITOR then confirm')).toBeVisible();
+    await expect(page.getByText('y = dry-run then confirm')).toBeVisible();
+    await expect(page.getByText('e = $EDITOR')).toBeVisible();
     await expect(page.getByText('N / Enter = stop')).toBeVisible();
-    const rescueDoctor = page.locator('pre').filter({ hasText: '$ hawkeye doctor' });
-    await expect(rescueDoctor).toBeVisible();
-    await expect(rescueDoctor).toHaveText(DOCTOR_SESSION);
+    await expect(page.locator('pre').filter({ hasText: '$ hawkeye doctor' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Package health' })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'What a hit contains' })).toHaveCount(0);
     await expect(page.getByText('zpool import -o readonly=on -N POOL')).toHaveCount(0);
     await expect(page.getByText("/rescue/sh -c 'echo rescue-ok'")).toHaveCount(0);

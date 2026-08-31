@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TerminalComponent } from '../terminal.component';
-import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
+import { HAWKEYE_SESSION } from '../terminal-sessions';
 
 @Component({
   selector: 'app-rescue',
@@ -35,14 +35,14 @@ import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
 
       <section class="mt-12 min-w-0" aria-labelledby="examples-heading">
         <h2 id="examples-heading" class="scroll-mt-24 font-heading text-2xl sm:text-3xl">Field examples</h2>
-        <p class="mt-3 max-w-3xl">The product interface is an interactive session. Type <code class="rounded bg-surface px-1">hawkeye</code> — no subcommand. Panic path.</p>
+        <p class="mt-3 max-w-3xl">The product interface is an interactive session. Type <code class="rounded bg-surface px-1">hawkeye</code> — no subcommand. On a healthy jail, first-look is silent, then the prompt.</p>
         <app-terminal [session]="hawkeye" label="hawkeye interactive session" caption="tty — hawkeye" />
         <p class="mt-3 max-w-3xl text-sm">
-          <code class="rounded bg-surface px-1">y</code> = apply (dry-run then confirm).
-          <code class="rounded bg-surface px-1">e</code> = <code class="rounded bg-surface px-1">$EDITOR</code> then confirm.
+          <code class="rounded bg-surface px-1">y</code> = dry-run then confirm.
+          <code class="rounded bg-surface px-1">e</code> = <code class="rounded bg-surface px-1">$EDITOR</code>.
           <code class="rounded bg-surface px-1">N</code> / Enter = stop.
+          The <code class="rounded bg-surface px-1">[y/N/e]</code> prompt stays in the tty, not a web form.
         </p>
-        <app-terminal [session]="doctor" label="hawkeye doctor terminal session" caption="tty — hawkeye doctor" />
       </section>
 
       <p class="mt-8 max-w-3xl">Apply happens on the host. Read <a routerLink="/security" class="text-brand underline-offset-2 hover:underline">Security</a> before wiring any model in.</p>
@@ -51,5 +51,4 @@ import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
 })
 export class RescueComponent {
   readonly hawkeye = HAWKEYE_SESSION;
-  readonly doctor = DOCTOR_SESSION;
 }
