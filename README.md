@@ -14,9 +14,9 @@ This repository is not the doctor. It explains Hawkeye and points at the other r
 
 ## Pages
 
-- Home: meatball surgery on servers and desktops (diagnose + apply, works in rescue)
-- Install: one pkg (`pkg install hawkeye`); hawkeye-data is a RUN_DEPENDS. Ports still two (sysutils/hawkeye and sysutils/hawkeye-data)
-- Rescue: tiers 0 / 1 / 2 (the aid station) and field examples (interactive `hawkeye` session plus apply `[y/N/e]` in the tty, not JSON)
+- Home: meatball surgery on servers and desktops (diagnose + apply, works in rescue). Field example is the jail `hawkeye` session (silent first-look, then the prompt)
+- Install: `# pkg install hawkeye` only; hawkeye-data is a RUN_DEPENDS. Ports still two (sysutils/hawkeye and sysutils/hawkeye-data)
+- Rescue: tiers 0 / 1 / 2 (the aid station). Field example is the same jail session (`hawkeye`, remount playbook, apply `[y/N/e]` in the tty — not JSON, not `hawkeye consult`, not `hawkeye doctor`)
 - MCP docs: /docs/mcp (the protocol URL is https://hawkeye.revytechinc.com/mcp — Streamable HTTPS, bearer token on GET and POST; the SPA does not share GET /mcp)
 - Security: secrets never through LLMs
 

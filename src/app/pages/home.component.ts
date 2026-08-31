@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TerminalComponent } from '../terminal.component';
-import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
+import { HAWKEYE_SESSION } from '../terminal-sessions';
 
 @Component({
   selector: 'app-home',
@@ -51,14 +51,14 @@ import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
 
       <section aria-labelledby="examples-heading" class="mt-10 min-w-0">
         <h2 id="examples-heading" class="font-heading text-xl sm:text-2xl">Field examples</h2>
-        <p class="mt-3 max-w-3xl text-sm text-slate-600">The product interface is an interactive session. Type <code class="rounded bg-surface px-1">hawkeye</code> — no subcommand. Panic path.</p>
+        <p class="mt-3 max-w-3xl text-sm text-slate-600">The product interface is an interactive session. Type <code class="rounded bg-surface px-1">hawkeye</code> — no subcommand. On a healthy jail, first-look is silent, then the prompt.</p>
         <app-terminal [session]="hawkeye" label="hawkeye interactive session" caption="tty — hawkeye" />
         <p class="mt-3 max-w-3xl text-sm text-slate-600">
-          <code class="rounded bg-surface px-1">y</code> = apply (dry-run then confirm).
-          <code class="rounded bg-surface px-1">e</code> = <code class="rounded bg-surface px-1">$EDITOR</code> then confirm.
+          <code class="rounded bg-surface px-1">y</code> = dry-run then confirm.
+          <code class="rounded bg-surface px-1">e</code> = <code class="rounded bg-surface px-1">$EDITOR</code>.
           <code class="rounded bg-surface px-1">N</code> / Enter = stop.
+          The <code class="rounded bg-surface px-1">[y/N/e]</code> prompt stays in the tty, not a web form.
         </p>
-        <app-terminal [session]="doctor" label="hawkeye doctor terminal session" caption="tty — hawkeye doctor" />
         <p class="mt-4 max-w-3xl text-sm">
           <a routerLink="/rescue" class="inline-flex min-h-12 items-center text-brand underline-offset-2 hover:underline">Rescue</a>
           has the same host tty.
@@ -97,5 +97,4 @@ import { DOCTOR_SESSION, HAWKEYE_SESSION } from '../terminal-sessions';
 })
 export class HomeComponent {
   readonly hawkeye = HAWKEYE_SESSION;
-  readonly doctor = DOCTOR_SESSION;
 }
