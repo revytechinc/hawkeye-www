@@ -6,7 +6,12 @@ import {
   PKG_INSTALL_SESSION,
 } from '../src/app/terminal-sessions';
 
-/** script(1) on pkg hawkeye-0.1.0_4 (SHA eaf77537). Healthy jail: first-look silent, then `>`. */
+/**
+ * python pty on pkg hawkeye-0.1.0_11 + hawkeye-data-0.1.0_4.
+ * Query "ZFS root is read-only after boot", default N, nothing applied.
+ * Healthy jail: first-look silent, then `>`. Keep `$ hawkeye` as the
+ * shell invocation, then the captured session verbatim.
+ */
 const JAIL_SCRIPT_SESSION = `$ hawkeye
 hawkeye
 > ${HAWKEYE_QUERY}
@@ -29,15 +34,40 @@ Remount ZFS root read-write
   mount -p | awk '$2=="/" {print}'
 
 also:
-  List, activate, or roll back a ZFS boot environment
-  Single-user versus multi-user
-  Compare fstab to mounted filesystems
-  Import a ZFS pool (readonly first, then unlock)
   Remount UFS root read-write
-  rc.conf enable=YES but script or binary missing
-  Bring up a NIC with ifconfig, dhclient, or service netif
+  Run fsck on UFS (never on ZFS)
+  Import a ZFS pool (readonly first, then unlock)
+  Load ZFS encryption keys at the console
+  Root filesystem full or inodes exhausted
+  List, activate, or roll back a ZFS boot environment
+  Compare fstab to mounted filesystems
 
-Apply these steps? [y/N/e]`;
+  You're experiencing a common issue with the ZFS filesystem during the boot process. Here are some steps to help you troubleshoot and resolve this problem:
+
+  1. **Verify Boot Process:**
+     - Ensure you are booting with the ZFS boot flag (ZFS_ROOT). This can be set by entering \`boot flag\` (ZFS_ROOT) at boot time.
+     - If you are using a boot loader, ensure it is set to boot with ZFS_ROOT (ZFS_ROOT).
+
+  2. **Check Boot Configuration:**
+     - Review your boot configuration file (e.g., \`boot.cfg\`) to ensure it is correctly set to boot with ZFS_ROOT.
+     - Make sure the boot loader is configured to boot with ZFS_ROOT.
+
+  3. **Check ZFS Configuration:**
+     - Ensure ZFS configuration is correct and that the \`root\` option is properly set.
+     - Verify that the \`root\` option is not causing any issues.
+
+  4. **Check ZFS Root Options:**
+     - Confirm that the ZFS root option is correctly set:
+       \`\`\`zfsctl
+       root on
+       \`\`\`
+
+  5. **Check Boot Loader Configuration:**
+     - Ensure your boot loader is correctly configured to boot with ZFS_ROOT.
+
+Apply these steps? [y/N/e]
+nothing applied
+>`;
 
 const shot = path.join('artifacts', 'playwright');
 
@@ -65,6 +95,12 @@ const forbiddenInternals = [
   'DEGRADED',
   'sshd-missing',
   '${name}',
+  'nomic',
+  'sqlite-vec',
+  'embeddings',
+  'vector ranking',
+  'GGUF',
+  'llama.cpp',
 ];
 
 async function assertNoHorizontalOverflow(page: Page): Promise<void> {
@@ -110,14 +146,22 @@ test.describe('Hawkeye public site', () => {
     expect(HAWKEYE_SESSION).toContain('You need to edit\n  files, write logs, or run tools that create files.');
     expect(HAWKEYE_SESSION).toContain('zfs set readonly=off "$ROOTDS"');
     expect(HAWKEYE_SESSION).toContain('also:');
-    expect(HAWKEYE_SESSION).toContain('List, activate, or roll back a ZFS boot environment');
-    expect(HAWKEYE_SESSION).toContain('Single-user versus multi-user');
-    expect(HAWKEYE_SESSION).toContain('Compare fstab to mounted filesystems');
-    expect(HAWKEYE_SESSION).toContain('Import a ZFS pool (readonly first, then unlock)');
     expect(HAWKEYE_SESSION).toContain('Remount UFS root read-write');
-    expect(HAWKEYE_SESSION).toContain('rc.conf enable=YES but script or binary missing');
-    expect(HAWKEYE_SESSION).toContain('Bring up a NIC with ifconfig, dhclient, or service netif');
+    expect(HAWKEYE_SESSION).toContain('Run fsck on UFS (never on ZFS)');
+    expect(HAWKEYE_SESSION).toContain('Import a ZFS pool (readonly first, then unlock)');
+    expect(HAWKEYE_SESSION).toContain('Load ZFS encryption keys at the console');
+    expect(HAWKEYE_SESSION).toContain('Root filesystem full or inodes exhausted');
+    expect(HAWKEYE_SESSION).toContain('List, activate, or roll back a ZFS boot environment');
+    expect(HAWKEYE_SESSION).toContain('Compare fstab to mounted filesystems');
+    expect(HAWKEYE_SESSION).not.toContain('Single-user versus multi-user');
+    expect(HAWKEYE_SESSION).not.toContain('rc.conf enable=YES but script or binary missing');
+    expect(HAWKEYE_SESSION).not.toContain('Bring up a NIC with ifconfig, dhclient, or service netif');
+    expect(HAWKEYE_SESSION).toContain("You're experiencing a common issue with the ZFS filesystem during the boot process.");
+    expect(HAWKEYE_SESSION).toContain('**Verify Boot Process:**');
+    expect(HAWKEYE_SESSION).toContain('```zfsctl');
     expect(HAWKEYE_SESSION).toContain('Apply these steps? [y/N/e]');
+    expect(HAWKEYE_SESSION).toContain('nothing applied');
+    expect(HAWKEYE_SESSION.endsWith('\nnothing applied\n>')).toBeTruthy();
     expect(HAWKEYE_SESSION).not.toContain('"query"');
     expect(HAWKEYE_SESSION).not.toContain('"Title"');
     expect(HAWKEYE_SESSION).not.toContain('"hits"');
@@ -125,6 +169,12 @@ test.describe('Hawkeye public site', () => {
     expect(HAWKEYE_SESSION).not.toContain('"Rank"');
     expect(HAWKEYE_SESSION).not.toContain('llm skipped');
     expect(HAWKEYE_SESSION).not.toContain('FTS skipped');
+    expect(HAWKEYE_SESSION).not.toContain('nomic');
+    expect(HAWKEYE_SESSION).not.toContain('sqlite-vec');
+    expect(HAWKEYE_SESSION).not.toContain('embeddings');
+    expect(HAWKEYE_SESSION).not.toContain('vector ranking');
+    expect(HAWKEYE_SESSION).not.toContain('GGUF');
+    expect(HAWKEYE_SESSION).not.toContain('llama.cpp');
     expect(PKG_INSTALL_SESSION).toBe('# pkg install hawkeye');
     expect(PKG_INSTALL_SESSION).not.toContain('hawkeye-data');
   });
@@ -142,12 +192,21 @@ test.describe('Hawkeye public site', () => {
     await expect(homeSession).toContainText('$ hawkeye');
     await expect(homeSession).toContainText(`> ${HAWKEYE_QUERY}`);
     await expect(homeSession).toContainText('Apply these steps? [y/N/e]');
+    await expect(homeSession).toContainText('nothing applied');
     await expect(homeSession).not.toContainText('hawkeye consult');
     await expect(homeSession).toContainText('You need to edit');
     await expect(homeSession).toContainText('files, write logs, or run tools that create files.');
+    await expect(homeSession).toContainText('Run fsck on UFS (never on ZFS)');
+    await expect(homeSession).toContainText('Load ZFS encryption keys at the console');
     await expect(homeSession).toContainText('Compare fstab to mounted filesystems');
+    await expect(homeSession).toContainText("You're experiencing a common issue with the ZFS filesystem during the boot process.");
+    await expect(homeSession).toContainText('**Verify Boot Process:**');
+    await expect(homeSession).toContainText('```zfsctl');
+    await expect(page.getByRole('heading', { name: 'Verify Boot Process' })).toHaveCount(0);
     await expect(homeSession).not.toContainText('DEGRADED');
     await expect(homeSession).not.toContainText('sshd-missing');
+    await expect(homeSession).not.toContainText('nomic');
+    await expect(homeSession).not.toContainText('Single-user versus multi-user');
     await expect(page.locator('pre').filter({ hasText: '$ hawkeye doctor' })).toHaveCount(0);
     await expect(page.getByText('y = dry-run then confirm')).toBeVisible();
     await expect(page.getByText(/Host commands, not a consult transcript/i)).toHaveCount(0);
@@ -222,7 +281,13 @@ test.describe('Hawkeye public site', () => {
     const installSession = page.locator('pre').filter({ hasText: `> ${HAWKEYE_QUERY}` });
     await expect(installSession).toBeVisible();
     await expect(installSession).toHaveText(HAWKEYE_SESSION);
+    await expect(installSession).toContainText('nothing applied');
+    await expect(installSession).toContainText('Run fsck on UFS (never on ZFS)');
+    await expect(installSession).toContainText("You're experiencing a common issue");
+    await expect(installSession).toContainText('**Verify Boot Process:**');
+    await expect(page.getByRole('heading', { name: 'Verify Boot Process' })).toHaveCount(0);
     await expect(installSession).not.toContainText('hawkeye consult');
+    await expect(installSession).not.toContainText('nomic');
     await expect(page.locator('pre').filter({ hasText: '$ hawkeye doctor' })).toHaveCount(0);
     await expect(page.getByRole('heading', { name: 'Package health' })).toHaveCount(0);
     const pre = page.locator('pre').first();
@@ -242,7 +307,13 @@ test.describe('Hawkeye public site', () => {
     await expect(rescueSession).toHaveText(HAWKEYE_SESSION);
     await expect(rescueSession).toContainText('$ hawkeye');
     await expect(rescueSession).toContainText('Apply these steps? [y/N/e]');
+    await expect(rescueSession).toContainText('nothing applied');
+    await expect(rescueSession).toContainText('Run fsck on UFS (never on ZFS)');
+    await expect(rescueSession).toContainText("You're experiencing a common issue");
+    await expect(rescueSession).toContainText('**Verify Boot Process:**');
+    await expect(page.getByRole('heading', { name: 'Verify Boot Process' })).toHaveCount(0);
     await expect(rescueSession).not.toContainText('hawkeye consult');
+    await expect(rescueSession).not.toContainText('nomic');
     await expect(page.getByText('y = dry-run then confirm')).toBeVisible();
     await expect(page.getByText('e = $EDITOR')).toBeVisible();
     await expect(page.getByText('N / Enter = stop')).toBeVisible();
